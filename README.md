@@ -5,13 +5,14 @@ Phân tích dữ liệu tài chính bằng Python qua từng phase: từ cơ b�
 ---
 
 ## 📚 Phase 1 – Python Basics
-- Viết các hàm cơ bản để:
-  - Tính giá trung bình
-  - Tìm ngày có giá cao nhất
-  - So sánh giá giữa hai ngày
-  - Xác định cổ phiếu tăng trưởng tốt nhất
+- Viết các hàm cơ bản để xử lý dữ liệu giá cổ phiếu:
+  - Tính lợi nhuận/lỗ (%) khi mua – bán (`calc_profit_percent`)
+  - Phân loại hiệu suất cổ phiếu theo % thay đổi (`classify_stock_change`)
+  - Tính trung bình động (Moving Average) để quan sát xu hướng (`moving_average`)
+  - Tìm giá cao nhất & thấp nhất trong danh sách giá (`min_max_price`)
 
 ---
+
 
 ## 📚 Phase 2 – Data Structures
 - Dùng **list / dict / set / tuple** để quản lý dữ liệu tài chính.  
