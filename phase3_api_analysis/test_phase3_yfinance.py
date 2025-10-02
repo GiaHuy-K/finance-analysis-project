@@ -1,7 +1,7 @@
-import yfinance as yf
-import pandas as pd
-df = yf.download("FPT.HM", period="1y")
-print(df.head())
+# import yfinance as yf
+# import pandas as pd
+# # df = yf.download("FPT.HM", period="1y")
+# # print(df.head())
 
 # # ==============================
 # # 1. Lấy dữ liệu cổ phiếu
