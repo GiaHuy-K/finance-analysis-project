@@ -1,99 +1,121 @@
-# import os
-# from vnstock import Vnstock
-# import pandas as pd
-
-# # Thư mục dataset
-# print("Current directory:", os.getcwd())
-# os.chdir(r"C:\Users\Admin\Desktop\PDS301m_HuongNTC2\Project\finance-analysis-project\phase2_data_structures\dataset")
-
-# symbols = ['FPT', 'MBB', 'VCB', 'VIC']
-# api = Vnstock()
-
-# portfolio = []
-
-# for sym in symbols:
-#     stock = api.stock(symbol=sym, source='VCI')  
-#     df = stock.quote.history(start='2023-01-01', end='2024-01-01', interval='1D')
-    
-#     # Lưu CSV riêng từng cổ phiếu
-#     filename = f"{sym}_history.csv"
-#     df.to_csv(filename, index=False, encoding="utf-8-sig")
-    
-#     # Chuyển DataFrame thành list of dicts và list of tuples
-#     stock_list = df.to_dict('records')  # List of dicts
-#     stock_tuples = [(row['time'], row['close']) for row in stock_list]  # List of tuples
-    
-#     # Tính trung bình giá đóng cửa
-#     avg_close = df['close'].mean()
-    
-#     # Tính lợi nhuận % = (giá cuối - giá đầu)/giá đầu * 100
-#     profit_pct = ((df['close'].iloc[-1] - df['close'].iloc[0]) / df['close'].iloc[0]) * 100
-    
-#     portfolio.append({
-#         "symbol": sym,
-#         "list_of_dicts": stock_list,
-#         "list_of_tuples": stock_tuples,
-#         "average_close": avg_close,
-#         "profit_pct": profit_pct
-#     })
-    
-#     print(f"{sym}: Avg Close = {avg_close:.2f}, Profit % = {profit_pct:.2f}%")
-
-# # Tìm cổ phiếu tăng trưởng tốt nhất
-# best_stock = max(portfolio, key=lambda x: x['profit_pct'])
-# print("\nCổ phiếu tăng trưởng tốt nhất:", best_stock['symbol'], f"({best_stock['profit_pct']:.2f}%)")
-
 import os
 from vnstock import Vnstock
 import pandas as pd
 
-# Thư mục dataset nằm cùng cấp file .py
+
+# ===== PATH SETUP =====
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_DIR = os.path.join(BASE_DIR, "dataset")
 os.makedirs(DATASET_DIR, exist_ok=True)
 os.chdir(DATASET_DIR)
 
-# ---- Function 1: Lấy dữ liệu cổ phiếu và lưu CSV ----
+
+# ===== FUNCTION 1: Lấy dữ liệu cổ phiếu và lưu CSV =====
 def fetch_stock_data(symbol, start, end):
+    """Lấy dữ liệu cổ phiếu từ API và lưu vào CSV."""
     api = Vnstock()
     stock = api.stock(symbol=symbol, source="VCI")
     df = stock.quote.history(start=start, end=end, interval="1D")
     df.to_csv(f"{symbol}_history.csv", index=False, encoding="utf-8-sig")
     return df
 
-# ---- Function 2: Tính trung bình & lợi nhuận % ----
+
+# ===== FUNCTION 2: Phân tích cơ bản (giá trung bình, lợi nhuận %) =====
 def analyze_stock(df):
-    avg_close = df['close'].mean()
-    profit_pct = ((df['close'].iloc[-1] - df['close'].iloc[0]) / df['close'].iloc[0]) * 100
+    avg_close = df["close"].mean()
+    profit_pct = ((df["close"].iloc[-1] - df["close"].iloc[0]) / df["close"].iloc[0]) * 100
     return avg_close, profit_pct
 
-# ---- Function 3: Chuyển sang list of dicts & tuples ----
+
+# ===== FUNCTION 3: Chuyển đổi dữ liệu =====
 def convert_to_structures(df):
-    stock_list = df.to_dict('records')
-    stock_tuples = [(row['time'], row['close']) for row in stock_list]
+    """Chuyển DataFrame sang list of dicts và list of tuples."""
+    stock_list = df.to_dict("records")
+    stock_tuples = [(row["time"], row["close"]) for row in stock_list]
     return stock_list, stock_tuples
 
-# ---- Main demo ----
+
+# ===== FUNCTION 4: Tính drawdown =====
+def compute_drawdowns(prices):
+    """Tính drawdown và max drawdown (%)."""
+    peak = prices[0]
+    drawdowns = []
+    max_dd = 0.0
+    for p in prices:
+        if p > peak:
+            peak = p
+        dd = (p - peak) / peak * 100.0
+        drawdowns.append(dd)
+        if dd < max_dd:
+            max_dd = dd
+    return drawdowns, max_dd
+
+
+# ===== FUNCTION 5: Tính độ biến động (volatility) =====
+def compute_volatility(df):
+    """Tính độ biến động (volatility %) dựa trên thay đổi ngày."""
+    returns = df["close"].pct_change().dropna()
+    volatility = returns.std() * 100
+    return volatility
+
+
+# ===== FUNCTION 6: Lọc cổ phiếu tiềm năng =====
+def filter_top_stocks(portfolio, min_profit=20, 
+                      max_dd=-10, max_volatility=5):
+    """Lọc các mã tăng trưởng tốt và rủi ro thấp."""
+    return [
+        s for s in portfolio
+        if s["profit_pct"] >= min_profit
+        and s["max_drawdown"] >= max_dd
+        and s.get("volatility_pct", 999) <= max_volatility
+    ]
+
+# potential_stocks = []
+
+# # Dùng vòng lặp for để duyệt qua từng cổ phiếu 's' trong danh mục 'portfolio'
+# for s in portfolio:
+#     if (s["profit_pct"] >= min_profit and
+#         s["max_drawdown"] >= max_dd and
+#         s.get("volatility_pct", 999) <= max_volatility):       
+#         potential_stocks.append(s)
+# return potential_stocks
+
+# ===== FUNCTION 7: Gói toàn bộ logic xử lý từng mã =====
+def process_stock(symbol, start="2023-01-01", end="2025-01-01"):
+    """Lấy, phân tích và tính drawdown cho 1 cổ phiếu."""
+    df = fetch_stock_data(symbol, start, end)
+    avg_close, profit_pct = analyze_stock(df)
+    stock_list, stock_tuples = convert_to_structures(df)
+    drawdowns, max_dd = compute_drawdowns(df["close"].tolist())
+    volatility = compute_volatility(df)
+
+    print(f"{symbol}: Avg Close={avg_close:.2f}, Profit={profit_pct:.2f}%, MaxDD={max_dd:.2f}%, Vol={volatility:.2f}%")
+    print(f"   Max Drawdown (%): {max_dd:.2f}\n")
+
+
+    return {
+        "symbol": symbol,
+        "average_close": avg_close,
+        "profit_pct": profit_pct,
+        "max_drawdown": max_dd,
+        "volatility_pct": volatility,
+        "list_of_dicts": stock_list,
+        "list_of_tuples": stock_tuples,
+    }
+
+
+# ===== MAIN =====
 if __name__ == "__main__":
-    symbols = ['FPT', 'MBB', 'VCB', 'VIC']
-    portfolio = []
+    symbols = ["FPT", "MBB", "VCB", "VIC"]
+    portfolio = [process_stock(sym) for sym in symbols]
 
-    for sym in symbols:
-        df = fetch_stock_data(sym, "2023-01-01", "2024-01-01")
-        avg_close, profit_pct = analyze_stock(df)
-        stock_list, stock_tuples = convert_to_structures(df)
+    best_stock = max(portfolio, key=lambda x: x["profit_pct"])
+    print("🔥 Cổ phiếu tăng trưởng tốt nhất:", best_stock["symbol"], f"({best_stock['profit_pct']:.2f}%)")
 
-        stock_data = {
-            "symbol": sym,
-            "list_of_dicts": stock_list,
-            "list_of_tuples": stock_tuples,
-            "average_close": avg_close,
-            "profit_pct": profit_pct
-        }
-        portfolio.append(stock_data)
-
-        print(f"{sym}: Avg Close = {avg_close:.2f}, Profit % = {profit_pct:.2f}%")
-
-    best_stock = max(portfolio, key=lambda x: x['profit_pct'])
-    print("\nCổ phiếu tăng trưởng tốt nhất:", best_stock['symbol'], f"({best_stock['profit_pct']:.2f}%)")
-
+    top_stocks = filter_top_stocks(portfolio)
+    if top_stocks:
+        print("\n Các cổ phiếu tiềm năng :")
+        for s in top_stocks:
+            print(f" - {s['symbol']} | Profit={s['profit_pct']:.2f}% | MaxDD={s['max_drawdown']:.2f}% | Vol={s['volatility_pct']:.2f}%")
+    else:
+        print("\nKhông có cổ phiếu nào tiềm năng.")
