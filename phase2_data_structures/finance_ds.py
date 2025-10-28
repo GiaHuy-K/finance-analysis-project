@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     # Lọc cổ phiếu tiềm năng
     top_stocks = filter_top_stocks(portfolio)
-    print("\n💎 Các cổ phiếu tiềm năng:")
+    print("\n Các cổ phiếu tiềm năng:")
     if top_stocks:
         for s in top_stocks:
             print(f" - {s['symbol']} | Profit={s['profit_pct']:.2f}% | MaxDD={s['max_drawdown']:.2f}% | Vol={s['volatility_pct']:.2f}%")
