@@ -1,0 +1,14 @@
+venv/
+.venv/
+
+# File rác của Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# File kết quả (Output)
+# Bỏ qua các file dữ liệu và biểu đồ do script tạo ra
+*.csv
+*.png
