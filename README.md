@@ -52,9 +52,10 @@ Script chính (`test_phase3_pandas.py`) sẽ tự động tải dữ liệu và 
 
 1.  **File CSV tổng hợp:** `portfolio_analysis_summary.csv`
 2.  **Biểu đồ 1:** `plot_1_heatmap.png` (Ma trận tương quan)
+![Biểu đồ 1: Heatmap Tương quan](phase3_api_analysis/dataset/plot_1_heatmap.png)
 3.  **Biểu đồ 2:** `plot_2_price_line_graph.png` (So sánh tăng trưởng chuẩn hóa)
+![Biểu đồ 2: So sánh Tăng trưởng](phase3_api_analysis/dataset/plot_2_price_line_graph.png)
 4.  **Biểu đồ 3:** `plot_3_profit_barplot.png` (So sánh % lợi nhuận)
-
 
 
 ---
