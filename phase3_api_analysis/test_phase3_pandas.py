@@ -2,6 +2,8 @@ import os
 from vnstock import Vnstock
 import pandas as pd
 
+# TODO: Thêm phần merge file, vài hàm phân tích và dùng pandas nhiều hơn, 
+# TODO: Dùng thêm Numpy và vẽ biểu đồ (matplotlib/seaborn)
 
 # ===== PATH SETUP =====
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,7 +18,7 @@ def fetch_stock_data(symbol, start, end):
     api = Vnstock()
     stock = api.stock(symbol=symbol, source="VCI")
     df = stock.quote.history(start=start, end=end, interval="1D")
-    df.to_csv(f"{symbol}_history.csv", index=False, encoding="utf-8-sig")
+    df.to_csv(f"{symbol}_history.csv", index=False, encoding="utf-8-sig", float_format='%.2f')
     return df
 
 
@@ -92,9 +94,7 @@ def process_stock(symbol, start="2023-01-01", end="2025-01-01"):
         "volatility_pct": volatility,
         "list_of_dicts": stock_list,
         "list_of_tuples": stock_tuples,
-    }
-
-
+    }   
 # ===== MAIN =====
 if __name__ == "__main__":
     symbols = ["FPT", "MBB", "VCB", "VIC"]
