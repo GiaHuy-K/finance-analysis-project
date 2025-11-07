@@ -65,7 +65,9 @@ Script chính (`test_phase3_pandas.py`) sẽ tự động tải dữ liệu và 
 ### 1. Clone Repository
 
 ```bash
-git clone [https://github.com/GiaHuy-K/finance-analysis-project.git](https://github.com/GiaHuy-K/finance-analysis-project.git)
+git clone https://github.com/GiaHuy-K/finance-analysis-project.git
+```
+```bash
 cd finance-analysis-project
 ```
 ### 2. Tạo môi trường ảo và cài thư viện
