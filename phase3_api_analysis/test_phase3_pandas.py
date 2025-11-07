@@ -11,7 +11,6 @@ DATASET_DIR = os.path.join(BASE_DIR, "dataset")
 os.makedirs(DATASET_DIR, exist_ok=True)
 os.chdir(DATASET_DIR)
 
-
 # ===== FUNCTION 1: Lấy dữ liệu cổ phiếu và lưu CSV =====
 def fetch_stock_data(symbol, start, end):
     """Lấy dữ liệu cổ phiếu từ API và lưu vào CSV."""
@@ -23,14 +22,12 @@ def fetch_stock_data(symbol, start, end):
     df.to_csv(f"{symbol}_history.csv", index=False, encoding="utf-8-sig", float_format='%.2f')
     return df
 
-
 # ===== FUNCTION 2: Phân tích cơ bản (giá trung bình, lợi nhuận %) =====
 def analyze_stock(df):
     """Tính giá đóng cửa trung bình và % lợi nhuận đơn."""
     avg_close = df["close"].mean()
     profit_pct = ((df["close"].iloc[-1] - df["close"].iloc[0]) / df["close"].iloc[0]) * 100
     return avg_close, profit_pct
-
 
 # ===== FUNCTION 3: Chuyển đổi dữ liệu ===== (Mở rộng cho tương lai)
 def convert_to_structures(df):
@@ -78,7 +75,6 @@ def compute_volatility(df):
     volatility = np.std(returns) * 100 
     return volatility
 
-
 # ===== FUNCTION 7: Lọc cổ phiếu tiềm năng =====
 def filter_top_stocks(portfolio, min_profit=20, 
                       max_dd=-10, max_volatility=5):
@@ -96,26 +92,22 @@ def compute_cagr(df):
     try:
         # Đảm bảo cột 'time' là kiểu datetime
         df['time'] = pd.to_datetime(df['time'])
-        
         # Lấy giá trị đầu và cuối
         start_val = df['close'].iloc[0]
         end_val = df['close'].iloc[-1]
-        
         # Lấy ngày đầu và cuối
         start_date = df['time'].iloc[0]
         end_date = df['time'].iloc[-1]
-        
-        # Tính số năm
+        # Tính số ngày 
         num_days = (end_date - start_date).days
         if num_days <= 0:
-            return 0.0  # Tránh lỗi chia cho 0
-        
-        num_years = num_days / 365.25 # Dùng 365.25 để tính năm nhuận
-        
+            return 0.0
+
+        num_years = num_days / 365.25  # Dùng 365.25 để tính năm nhuận
         # Công thức CAGR
         cagr = ((end_val / start_val) ** (1 / num_years)) - 1
         
-        return cagr * 100  # Trả về dạng %
+        return cagr * 100  
     except Exception as e:
         print(f"Lỗi khi tính CAGR: {e}")
         return 0.0
@@ -175,10 +167,9 @@ def get_portfolio_prices(symbols):
 
     # 1. Tính lợi nhuận ngày
     daily_returns = portfolio_prices.pct_change().dropna()
-    
-    # 2. Bỏ các ngày không có dữ liệu (fillna)
-    # Dùng ffill (forward fill) để lấp các ngày nghỉ
-    portfolio_prices = portfolio_prices.ffill().dropna() 
+
+    # 2. Dùng ffill (forward fill) để lấp các ngày nghỉ
+    portfolio_prices = portfolio_prices.ffill().dropna()
 
     return portfolio_prices, daily_returns
 # ===== FUNCTION 11 : TÍNH TƯƠNG QUAN =====
@@ -326,15 +317,13 @@ if __name__ == "__main__":
     # 3. Xuất file CSV tổng hợp (Deliverable 6.2)
     portfolio_df = export_summary_csv(portfolio_list)
 
-    # 4. (MỚI) Lấy dữ liệu gộp
-    # Chỗ này gọi F10 mới, trả về 2 bảng
+    # 4.  Lấy dữ liệu gộp giá đóng cửa và lợi nhuận ngày
     portfolio_prices, daily_returns = get_portfolio_prices(symbols)
 
     # 5. Vẽ 3 biểu đồ
     if portfolio_prices is not None and daily_returns is not None:
         
         # 5.1. Tính và vẽ Heatmap (Dùng daily_returns)
-        # Chỗ này gọi F11 mới, trả về 1 bảng
         corr_matrix = analyze_correlation(daily_returns)
         plot_correlation_heatmap(corr_matrix) 
         
