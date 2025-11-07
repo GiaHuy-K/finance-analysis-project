@@ -39,7 +39,6 @@ def convert_to_structures(df):
     stock_tuples = [(row["time"], row["close"]) for row in stock_list]
     return stock_list, stock_tuples
 
-
 # ===== FUNCTION 4: Tính drawdown =====
 def compute_drawdowns(prices):
     """Tính drawdown và max drawdown (%)."""
@@ -55,7 +54,7 @@ def compute_drawdowns(prices):
             max_dd = dd
     return drawdowns, max_dd
 
-# ===== FUNCTION 5: Tính độ biến động cuộn (rolling volatility) =====
+# ===== FUNCTION 5: Tính độ biến động cuộn (rolling volatility) ( Chưa sử dụng) =====
 def compute_rolling_volatility(df, window=30):
     """
     Tính độ biến động cuộn (rolling volatility) dựa trên
@@ -68,7 +67,6 @@ def compute_rolling_volatility(df, window=30):
     # Nhân với 100 để ra %
     rolling_vol = daily_returns.rolling(window=window).std() * 100
     
-    # Đổi tên cho đẹp
     rolling_vol.name = f"rolling_vol_{window}d"
     return rolling_vol
 
@@ -76,7 +74,7 @@ def compute_rolling_volatility(df, window=30):
 def compute_volatility(df):
     """Tính độ biến động (volatility %) dựa trên thay đổi ngày."""
     returns = df["close"].pct_change().dropna()
-    # Dùng NumPy để thể hiện kỹ năng (theo yêu cầu)
+    
     volatility = np.std(returns) * 100 
     return volatility
 
@@ -197,8 +195,8 @@ def analyze_correlation(daily_returns):
     print(correlation_matrix.to_string(float_format='%.2f'))
 
     return correlation_matrix 
-# ===== FUNCTION 11: VẼ BIỂU ĐỒ =====
-# ===== FUNCTION 11.1: VẼ HEATMAP TƯƠNG QUAN =====
+# ===== FUNCTION 12: VẼ BIỂU ĐỒ =====
+# ===== FUNCTION 12.1: VẼ HEATMAP TƯƠNG QUAN =====
 def plot_correlation_heatmap(correlation_matrix):
     """Vẽ và lưu biểu đồ heatmap tương quan."""
     print("Đang vẽ biểu đồ 1: Heatmap tương quan...")
@@ -217,7 +215,7 @@ def plot_correlation_heatmap(correlation_matrix):
         print(f"Lỗi khi vẽ Heatmap: {e}")
     
 
-# ===== FUNCTION 11.2: VẼ BIỂU ĐỒ GIÁ (LINE GRAPH) =====
+# ===== FUNCTION 12.2: VẼ BIỂU ĐỒ GIÁ (LINE GRAPH) =====
 def plot_price_line_graph(portfolio_prices, start_date, end_date):
     """Vẽ biểu đồ đường so sánh giá của các mã."""
     print("Đang vẽ biểu đồ 2: So sánh giá cổ phiếu (Line Graph)...")
@@ -243,8 +241,8 @@ def plot_price_line_graph(portfolio_prices, start_date, end_date):
     except Exception as e:
         print(f"Lỗi khi vẽ Line Graph: {e}")
 
-# ===== FUNCTION 11.3: VẼ BAR PLOT SO SÁNH LỢI NHUẬN =====
-def plot_profit_barplot(portfolio_df, start_date, end_date): # <-- Đã nhận 2 tham số mới
+# ===== FUNCTION 12.3: VẼ BAR PLOT SO SÁNH LỢI NHUẬN =====
+def plot_profit_barplot(portfolio_df, start_date, end_date): 
     """Vẽ biểu đồ cột so sánh % lợi nhuận."""
     print("Đang vẽ biểu đồ 3: So sánh lợi nhuận...")
     try:
@@ -271,7 +269,7 @@ def plot_profit_barplot(portfolio_df, start_date, end_date): # <-- Đã nhận 2
         print(f"Lỗi khi vẽ Bar Plot: {e}")
     
         
-# ===== FUNCTION 12 : XUẤT CSV TỔNG HỢP =====
+# ===== FUNCTION 13 : XUẤT CSV TỔNG HỢP =====
 def export_summary_csv(portfolio_list):
     """Chuyển list portfolio sang DataFrame và lưu CSV."""
     
@@ -281,7 +279,7 @@ def export_summary_csv(portfolio_list):
             "symbol": s["symbol"],
             "average_close": s["average_close"],
             "profit_pct": s["profit_pct"],
-            "cagr_pct": s["cagr_pct"], # <-- ĐÃ SỬA LỖI
+            "cagr_pct": s["cagr_pct"], 
             "max_drawdown": s["max_drawdown"],
             "volatility_pct": s["volatility_pct"],
         })
