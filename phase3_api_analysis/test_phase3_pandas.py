@@ -201,7 +201,7 @@ def plot_correlation_heatmap(correlation_matrix):
         plot_file = os.path.join(DATASET_DIR, "plot_1_heatmap.png")
         plt.tight_layout()
         plt.savefig(plot_file)
-        plt.show()
+        #plt.show()
         plt.close() 
         print(f"Đã lưu: {plot_file}")
     except Exception as e:
@@ -216,7 +216,7 @@ def plot_price_line_graph(portfolio_prices, start_date, end_date):
         
         # Dùng seaborn để vẽ line plot cho DataFrame
         
-        sns.lineplot(data=portfolio_prices) #, dashes=False) đường nét liền
+        sns.lineplot(data=portfolio_prices) #dashes=False) #đường nét liền
         
         title_str = f"Biểu đồ 2: So sánh giá cổ phiếu (Từ {start_date} đến {end_date})"
         plt.title(title_str)
@@ -227,7 +227,7 @@ def plot_price_line_graph(portfolio_prices, start_date, end_date):
         plot_file = os.path.join(DATASET_DIR, "plot_2_price_line_graph.png")
         plt.tight_layout()
         plt.savefig(plot_file)
-        plt.show()
+        #plt.show()
         plt.close() # Đóng figure
         print(f"Đã lưu: {plot_file}")
     except Exception as e:
@@ -254,7 +254,7 @@ def plot_profit_barplot(portfolio_df, start_date, end_date):
         plot_file = os.path.join(DATASET_DIR, "plot_3_profit_barplot.png")
         plt.tight_layout()
         plt.savefig(plot_file)
-        plt.show()
+        #plt.show()
         plt.close() 
         print(f"Đã lưu: {plot_file}")
     except Exception as e:
