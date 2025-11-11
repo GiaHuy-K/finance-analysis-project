@@ -172,6 +172,7 @@ def get_portfolio_prices(symbols):
     portfolio_prices = portfolio_prices.ffill().dropna()
 
     return portfolio_prices, daily_returns
+
 # ===== FUNCTION 11 : TÍNH TƯƠNG QUAN =====
 def analyze_correlation(daily_returns):
     """
@@ -186,6 +187,7 @@ def analyze_correlation(daily_returns):
     print(correlation_matrix.to_string(float_format='%.2f'))
 
     return correlation_matrix 
+
 # ===== FUNCTION 12: VẼ BIỂU ĐỒ =====
 # ===== FUNCTION 12.1: VẼ HEATMAP TƯƠNG QUAN =====
 def plot_correlation_heatmap(correlation_matrix):
@@ -205,7 +207,6 @@ def plot_correlation_heatmap(correlation_matrix):
     except Exception as e:
         print(f"Lỗi khi vẽ Heatmap: {e}")
     
-
 # ===== FUNCTION 12.2: VẼ BIỂU ĐỒ GIÁ (LINE GRAPH) =====
 def plot_price_line_graph(portfolio_prices, start_date, end_date):
     """Vẽ biểu đồ đường so sánh giá của các mã."""
@@ -258,8 +259,7 @@ def plot_profit_barplot(portfolio_df, start_date, end_date):
         print(f"Đã lưu: {plot_file}")
     except Exception as e:
         print(f"Lỗi khi vẽ Bar Plot: {e}")
-    
-        
+         
 # ===== FUNCTION 13 : XUẤT CSV TỔNG HỢP =====
 def export_summary_csv(portfolio_list):
     """Chuyển list portfolio sang DataFrame và lưu CSV."""

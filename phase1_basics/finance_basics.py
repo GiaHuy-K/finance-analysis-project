@@ -19,6 +19,7 @@ def moving_average(prices, window):
     if len(prices) < window:
         return None  # không đủ dữ liệu thì ra None 
     return sum(prices[-window:]) / window
+
 # 4. Tìm giá cao nhất & thấp nhất
 def min_max_price(prices):
     return max(prices), min(prices)
